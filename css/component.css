@@ -1,0 +1,236 @@
+/* Component styles */
+@font-face {
+	font-family: 'Blokk';
+	src: url('../fonts/blokk/BLOKKRegular.eot');
+	src: url('../fonts/blokk/BLOKKRegular.eot?#iefix') format('embedded-opentype'),
+		 url('../fonts/blokk/BLOKKRegular.woff') format('woff'),
+		 url('../fonts/blokk/BLOKKRegular.svg#BLOKKRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+.component {
+	line-height: 1.5em;
+	margin: 0 auto;
+	padding: 2em 0 3em;
+	width: 90%;
+	max-width: 1000px;
+	overflow: hidden;
+}
+.component .filler {
+	font-family: "Blokk", Arial, sans-serif;
+	color: #d3d3d3;
+}
+table {
+    border-collapse: collapse;
+    margin-bottom: 3em;
+    width: 100%;
+    background: #fff;
+}
+td, th {
+    padding: 0.75em 1.5em;
+    text-align: left;
+    border-color: #1ab394;
+    max-width: 150px; 
+     max-height: 50px;
+	word-wrap:break-word;
+	font-size: small;
+	text-align: center;
+	vertical-align: middle;
+}
+	td.err {
+		background-color: #e992b9;
+		color: #fff;
+		font-size: 0.75em;
+		text-align: center;
+		line-height: 1;
+		border: 1px solid #DCDCDC;
+		box-sizing: border-box;
+
+	}
+th {
+    background-color: #31bc86;
+    font-weight: bold;
+    color: #fff;
+    white-space: nowrap;
+}
+tbody th {
+	background-color: #2ea879;
+}
+tbody tr:nth-child(2n-1) {
+    background-color: #f5f5f5;
+    transition: all .125s ease-in-out;
+}
+tbody tr:hover {
+    background-color: rgba(129,208,177,.3);
+}
+
+/* For appearance */
+.sticky-wrap {
+	overflow-x: auto;
+	overflow-y: hidden;
+	position: relative;
+	margin: 3em 0;
+	width: 100%;
+}
+.sticky-wrap .sticky-thead,
+.sticky-wrap .sticky-col,
+.sticky-wrap .sticky-intersect {
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: all .125s ease-in-out;
+	z-index: 50;
+	width: auto; /* Prevent table from stretching to full size */
+}
+	.sticky-wrap .sticky-thead {
+		box-shadow: 0 0.25em 0.1em -0.1em rgba(0,0,0,.125);
+		z-index: 100;
+		width: 100%; /* Force stretch */
+	}
+	.sticky-wrap .sticky-intersect {
+		opacity: 1;
+		z-index: 150;
+
+	}
+		.sticky-wrap .sticky-intersect th {
+			background-color: #666;
+			color: #eee;
+		}
+.sticky-wrap td,
+.sticky-wrap th {
+	box-sizing: border-box;
+}
+
+/* Not needed for sticky header/column functionality */
+td.user-name {
+	text-transform: capitalize;
+}
+.sticky-wrap.overflow-y {
+	overflow-y: auto;
+	max-height: 50vh;
+}
+
+
+  .label {
+    border: 1px solid #000;
+  }
+
+  .label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+  border-style: none;
+}
+
+.label:empty {
+  display: none;
+}
+
+.label-default[href]:hover,
+.label-default[href]:focus {
+  background-color: #5e5e5e;
+}
+.label-primary {
+  background-color: #337ab7;
+}
+.label-primary[href]:hover,
+.label-primary[href]:focus {
+  background-color: #286090;
+}
+.label-success {
+  background-color: #5cb85c;
+}
+.label-success[href]:hover,
+.label-success[href]:focus {
+  background-color: #449d44;
+}
+.label-info {
+  background-color: #5bc0de;
+}
+.label-info[href]:hover,
+.label-info[href]:focus {
+  background-color: #31b0d5;
+}
+.label-warning {
+  background-color: #f0ad4e;
+}
+.label-warning[href]:hover,
+.label-warning[href]:focus {
+  background-color: #ec971f;
+}
+.label-danger {
+  background-color: #d9534f;
+}
+.label-danger[href]:hover,
+.label-danger[href]:focus {
+  background-color: #c9302c;
+}
+
+
+/* Loader */
+.loader:before,
+.loader:after,
+.loader {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
+}
+.loader {
+  color: #2ea879;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+
