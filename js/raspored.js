@@ -45,8 +45,9 @@ function loadByInstructor()
 		 $.get('https://jsonp.afeld.me/?url=http://raspored.finki.ukim.mk/services/ScheduleByprofessor?value=' + courses[i].ID, function(data){
     		//console.log(courses);
     		//console.log(i);
-    		for( c = 1; c<data.length;c++)
+    		for( c = 0; c<data.length;c++)
     		{
+
     			for(k=0;k<courses.length;k++)
     			{
     			var course = courses[k].course;
@@ -57,6 +58,7 @@ function loadByInstructor()
     				var room = data[c].title.split("Просторија:")[1];
     				start = parseInt(start.split("T")[1].split(":"));
                     end = parseInt(end.split("T")[1].split(":")[0]);
+
                     while (start <= end) {
                                   $("tbody tr:nth-child( " + (start - 7) + ")>:nth-child(" + (1 + parseInt(data[c].daynum)) + ")").html("<b >" + room + "</b> <br>" + courses[k].instructor + "<br>" + courses[k].course).addClass("err");
                                   start += 1;
