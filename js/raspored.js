@@ -22,6 +22,33 @@
 
   });
 
+function deleteCourse(ID,Name)
+{
+	console.log(ID + "  " + Name);
+	for(i=0;i<courses.length;i++)
+	{
+		console.log(courses[i].ID == ID);
+		console.log(courses[i].course.localeCompare(Name));
+		if(courses[i].ID == ID && courses[i].course.indexOf(Name)!= -1)
+		{
+			courses.splice(i, 1);
+			console.log(courses);
+			localStorage.setItem("courses", JSON.stringify(courses));
+			for(x = 1;x<=13;x++)
+			{
+				for(y=2;y<=7;y++)
+{
+	var cellData = $("tbody tr:nth-child( " + x + ")>:nth-child(" + y + ")").text();
+	if(cellData.indexOf(Name)!= -1)
+	{
+					$("tbody tr:nth-child( " + x + ")>:nth-child(" + y + ")").html("").removeClass("err");
+	}
+}
+			}
+			break;
+		}
+	}
+}
 function addCourses()
 {
 	$("#addbtn").hide();
@@ -60,7 +87,7 @@ function loadByInstructor()
                     end = parseInt(end.split("T")[1].split(":")[0]);
 
                     while (start <= end) {
-                                  $("tbody tr:nth-child( " + (start - 7) + ")>:nth-child(" + (1 + parseInt(data[c].daynum)) + ")").html("<b >" + room + "</b> <br>" + courses[k].instructor + "<br>" + courses[k].course).addClass("err");
+               $("tbody tr:nth-child( " + (start - 7) + ")>:nth-child(" + (1 + parseInt(data[c].daynum)) + ")").html("<b >" + room + "</b> <a href=\"#\"> <img onclick=\"deleteCourse(\'" + courses[k].ID + "\',\'" + courses[k].course +"\'  )\" src=\"close.png\" class=\"delete\"></a> <br>" + courses[k].instructor + "<br>" + courses[k].course).addClass("err");
                                   start += 1;
                               }
     			}

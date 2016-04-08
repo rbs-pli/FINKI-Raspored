@@ -207,3 +207,10 @@ a.btn {
     background-color: #CCC;
     border-color: rgba(0,0,0,0.9);
   }
+
+
+.delete {
+  width: 15px;
+  height: 15px;
+  float: right;
+}
