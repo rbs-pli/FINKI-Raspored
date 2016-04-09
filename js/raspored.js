@@ -1,189 +1,181 @@
   //Data
-  instructors = []; // Професори autocomplete
+  allInstructors = []; // Професори autocomplete
   allCourses = []; // Курсеви autocomplete
+  allRooms = [] //Простории autocomplete
   schedule = []; // Распоред 
   courses = []; // Листа на курсеви 
-  instructorsWithID = []; //Професори со ID 
-
+  rooms = []; // Листа на соби
   $(document).ready(function() {
-  	$(".addCourse").hide()
+      $(".addCourse").hide();
       courses = JSON.parse(localStorage.getItem("courses"));
-      if (courses != null)
-      {
-      	$(".loaderStatus").hide();
-          loadByInstructor();
-          }
-      else
-         {
-        // 	$(".loaderStatus").show();
-        $(".loaderStatus").hide();
-         	courses = [];
-         }
+      if (courses != null) {
+          $(".loaderStatus").hide();
+          loadRooms();
+      } else {
+          $(".loaderStatus").hide();
+          courses = [];
+      }
 
+      var instructor = document.getElementById("Професор");
+      var awesomplete = new Awesomplete(instructor);
+      awesomplete.list = allInstructors;
+      var course = document.getElementById("Предмет");
+      var awesomplete = new Awesomplete(course);
+      awesomplete.list = allCourses;
+      var room = document.getElementById("Просторија");
+      var awesomplete = new Awesomplete(room);
+      awesomplete.list = allRooms;
   });
 
-function deleteCourse(ID,Name)
+
+function reset()
 {
-	console.log(ID + "  " + Name);
-	for(i=0;i<courses.length;i++)
-	{
-		console.log(courses[i].ID == ID);
-		console.log(courses[i].course.localeCompare(Name));
-		if(courses[i].ID == ID && courses[i].course.indexOf(Name)!= -1)
-		{
-			courses.splice(i, 1);
-			console.log(courses);
-			localStorage.setItem("courses", JSON.stringify(courses));
-			for(x = 1;x<=13;x++)
-			{
-				for(y=2;y<=7;y++)
-{
-	var cellData = $("tbody tr:nth-child( " + x + ")>:nth-child(" + y + ")").text();
-	if(cellData.indexOf(Name)!= -1)
-	{
-					$("tbody tr:nth-child( " + x + ")>:nth-child(" + y + ")").html("").removeClass("err");
-	}
+      for (var i = 0; i < schedule.length; i++) {
+      var ID = schedule[i].ID;
+      var start = schedule[i].start;
+      var end = schedule[i].end;
+      var room = schedule[i].room;
+      var title = schedule[i].title;
+      var instructor = schedule[i].instructor;
+      while (start <= end) {
+          var x = start - 7;
+          var y = 1 + schedule[i].daynum;
+          $("tbody tr:nth-child( " + x + ")>:nth-child(" + y + ")").html("").removeClass("err");
+          start += 1;
+      }
+   }
 }
+
+  function deleteCourse(id) {
+     courses.splice(id, 1);
+     localStorage.setItem("courses", JSON.stringify(courses));
+     reset();
+     schedule = [];
+     loadRooms();
+  }
+
+  function addCourses() {
+      $("#addbtn").hide();
+      $(".loaderStatus").show();
+      setAutocomplete();
+  }
+
+
+  function draw(i) {
+      var ID = schedule[i].ID;
+      var start = schedule[i].start;
+      var end = schedule[i].end;
+      var room = schedule[i].room;
+      var title = schedule[i].title.split("Просторија:")[0];
+      var title = title.substring(0,title.length-2);
+      var instructor = schedule[i].instructor;
+      while (start <= end) {
+          var x = start - 7;
+          var y = 1 + schedule[i].daynum;
+          $("tbody tr:nth-child( " + x + ")>:nth-child(" + y + ")").html("<b >" + room + "</b> <a href=\"#\"> <img onclick=\"deleteCourse(\'" + ID + "\' )\" src=\"close.png\" class=\"delete\"></a> <br>" + title).addClass("err");
+          start += 1;
+      }
+  }
+
+
+function getRoomSchedule(data)
+{
+	for(var i = 0;i<data.length;i++)
+	{
+				rooms.push(data[i]);
+				var title = data[i].title;
+		 		var start = moment(data[i].start).format();
+ 				var end = moment(data[i].end).format();
+ 				var room = data[i].title.split("Просторија:")[1];
+ 				var start = parseInt(start.split("T")[1].split(":"));
+              	var end = parseInt(end.split("T")[1].split(":")[0]);
+
+		for(var c = 0 ;c<courses.length;c++)
+		{
+			var cinstructor = courses[c].instructor;
+			var ctitle = courses[c].course;
+			var cstart = courses[c].start;
+			var cdaynum = courses[c].daynum;
+			var croom = courses[c].room;
+			if(title.indexOf(ctitle) != -1 && title.indexOf(cinstructor) != -1  && title.indexOf(croom) != -1)
+			{
+					if(cdaynum != null && cdaynum != data[i].daynum)
+						continue;
+					if(cstart != null && cstart != start)
+						continue;
+					schedule.push(
+					{
+				  ID: c,
+                  daynum: parseInt(data[i].daynum),
+                  start: start,
+                  end: end,
+                  room: room,
+                  title: title,
+					});
+					console.log("C is " + c);
+			draw(schedule.length - 1);
 			}
-			break;
+
 		}
 	}
 }
-function addCourses()
+function getRooms(data)
 {
-	$("#addbtn").hide();
-	$(".loaderStatus").show();
-	setAutocomplete();
-}
-  function sleep(milliseconds) {
-      var start = new Date().getTime();
-      for (var i = 0; i < 1e7; i++) {
-          if ((new Date().getTime() - start) > milliseconds) {
-              break;
-          }
-      }
-  }
-
-function loadByInstructor()
-{
-	for(i=0;i<courses.length;i++)
+	for( var rIndex=0;rIndex<data.length;rIndex++)
 	{
-		//console.log(courses[i]);
-		 $.get('https://jsonp.afeld.me/?url=http://raspored.finki.ukim.mk/services/ScheduleByprofessor?value=' + courses[i].ID, function(data){
-    		//console.log(courses);
-    		//console.log(i);
-    		for( c = 0; c<data.length;c++)
-    		{
-
-    			for(k=0;k<courses.length;k++)
-    			{
-    			var course = courses[k].course;
-    			if(data[c].title.indexOf(course)!= -1)
-    			{
-    				var start = moment(data[c].start).format();
-    				var end = moment(data[c].end).format();
-    				var room = data[c].title.split("Просторија:")[1];
-    				start = parseInt(start.split("T")[1].split(":"));
-                    end = parseInt(end.split("T")[1].split(":")[0]);
-
-                    while (start <= end) {
-               $("tbody tr:nth-child( " + (start - 7) + ")>:nth-child(" + (1 + parseInt(data[c].daynum)) + ")").html("<b >" + room + "</b> <a href=\"#\"> <img onclick=\"deleteCourse(\'" + courses[k].ID + "\',\'" + courses[k].course +"\'  )\" src=\"close.png\" class=\"delete\"></a> <br>" + courses[k].instructor + "<br>" + courses[k].course).addClass("err");
-                                  start += 1;
-                              }
-    			}
-    		}
-    		}
-  		});
-		
+		$.get('https://json2jsonp.com/?url=http://raspored.finki.ukim.mk/services/ScheduleByRoom?value=' + data[rIndex].Id + '&callback=getRoomSchedule');
 	}
 }
+function loadRooms()
+{
+	$.get('https://json2jsonp.com/?url=http://raspored.finki.ukim.mk/services/rooms&callback=getRooms');
+}
 
+function cancel()
+{
+	$(".addCourse").hide();
+	$("#addbtn").show();
+}
   function saveCourses() {
-      if (document.getElementById("Предмет").value.length == 0)
-          return;
-      instructor = document.getElementById("Професор").value;
-      var id = null;
-      for (i = 0; i < instructorsWithID.length; i++) {
-          if (instructor.localeCompare(instructorsWithID[i].Name) == 0) {
-              id = instructorsWithID[i].Id;
-              break;
-          }
-      }
-      if (id == null)
-      	return;
+  	  var room = document.getElementById("Просторија").value;
+  	  if(room == undefined)
+  	  	var room = "";
       courses.push({
-          ID: id,
           course: document.getElementById("Предмет").value,
-          instructor: instructor
+          instructor: document.getElementById("Професор").value,
+          room: room,
+          daynum: $("#Ден").val(),
+          start: $("#Време").val()
       });
       localStorage.setItem("courses", JSON.stringify(courses));
-      loadByInstructor();
-      document.getElementById("Предмет").value = "";
-      document.getElementById("Професор").value = "";
+      loadRooms();
   }
 
-  function loadRooms() {
-      $.get('https://jsonp.afeld.me/?url=http://raspored.finki.ukim.mk/services/rooms', function(rooms) {
-          //var rooms = data;
-          var roomsSchedule = [];
-          for (i = 0; i < rooms.length; i++) {
-              //console.log(rooms[i]);
-              $.get('https://jsonp.afeld.me/?url=http://raspored.finki.ukim.mk//services/ScheduleByroom?value=' + rooms[i].Id, function(roomData) {
-                  for (r = 0; r < roomData.length; r++) {
-                      for (c = 0; c < courses.length; c++) {
-                          //console.log(roomData[r].title);
-                          if (roomData[r].title.indexOf(courses[c].course) != -1 && roomData[r].title.indexOf(courses[c].instructor) != -1) {
-                              roomData[r].start = moment(roomData[r].start).format();
-                              var test = moment(roomData[r].start).format();
-                              roomData[r].end = moment(roomData[r].end).format();
-                              schedule.push(roomData[r]);
-                              var room = roomData[r].title.split("Просторија:");
-                              var start = parseInt(roomData[r].start.split("T")[1].split(":"));
-                              var end = parseInt(roomData[r].end.split("T")[1].split(":")[0]);
-                              while (start <= end) {
-                                  // console.log("Time " + (start - 7) + " Den " + ( 1 + parseInt(roomData[r].daynum)) + " Data " + roomData[r].title  );
-                                  $("tbody tr:nth-child( " + (start - 7) + ")>:nth-child(" + (1 + parseInt(roomData[r].daynum)) + ")").html("<b >" + room[1] + "</b> <br>" + room[0].substring(0, room[0].length - 2)).addClass("err");
-                                  start += 1;
-                              }
-                          }
-                      }
-                  }
 
-              });
-              sleep(250);
+
+  function getInstructorData(cData) {
+      for (var c = 0; c < cData.length; c++) {
+          var title = cData[c].title.split("- Просторија:")[0];
+          if (allCourses.indexOf(title) == -1) {
+              allCourses.push(title);
           }
-      });
-  };
+           var room = cData[c].title.split("- Просторија:")[1];
+          if (allRooms.indexOf(room) == -1) {
+              allRooms.push(room);
+          }
+          
+      }
+  }
+
+  function getInstructorID(data) {
+      for (var i = 0; i < data.length; i++) {
+          allInstructors.push(data[i].Name);
+          $.get('https://json2jsonp.com/?url=http://raspored.finki.ukim.mk/services/ScheduleByprofessor?value=' + data[i].Id + '&callback=getInstructorData');
+      }
+      $(".loaderStatus").hide();
+      $(".addCourse").show();
+  }
 
   function setAutocomplete() {
-
-      //Profesori & Предмети
-      $.get('https://jsonp.afeld.me/?url=http://raspored.finki.ukim.mk/services/professors', function(data) {
-          instructorsWithID = data;
-          for (i = 0; i < data.length; i++) {
-              instructors.push(data[i].Name);
-              $.get('https://jsonp.afeld.me/?url=http://raspored.finki.ukim.mk/services/ScheduleByprofessor?value=' + data[i].Id, function(cData) {
-                  for (c = 0; c < cData.length; c++) {
-                      var title = cData[c].title.split("- Просторија:")[0];
-                     // console.log(title);
-                      //	console.log(allCourses.indexOf(title));
-                      if (allCourses.indexOf(title) == -1) {
-                          allCourses.push(title);
-                      }
-
-                  }
-                   $(".loaderStatus").html("Loading " + i + " out of " + data.length);
-              });
-             
-              sleep(320);
-            $(".loaderStatus").hide();
-      		$(".addCourse").show();
-          }
-      });
-      var input = document.getElementById("Професор");
-      var awesomplete = new Awesomplete(input);
-      awesomplete.list = instructors;
-      input = document.getElementById("Предмет");
-      awesomplete = new Awesomplete(input);
-      awesomplete.list = allCourses;
+      $.get('https://json2jsonp.com/?url=http://raspored.finki.ukim.mk/services/professors&callback=getInstructorID');
   }

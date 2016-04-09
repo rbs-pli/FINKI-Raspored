@@ -10,7 +10,6 @@
 		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="css/demo.css" />
 		<link rel="stylesheet" type="text/css" href="css/component.css" />
-
 		<script src="js/jquery-1.12.0.min.js"></script>
 		<script src="js/moment.js"></script>
 		<script src="js/awesomplete.min.js"></script>
@@ -29,10 +28,35 @@
 				
 				<a href="#" class="btn" onclick="addCourses()" id="addbtn" >Додај предмети</a>
 				<div class="addCourse">
-  <input type="text" id="Предмет" placeholder="Предмет" /> <br>
+  <input type="text" id="Предмет" placeholder=" *Предмет" /> <br>
   <input type = "text" id="Професор" placeholder="Професор" /><br>
+  <input type = "text" id="Просторија" placeholder="Просторија" /><br><br>
   
-  <a href="#" class="btn" onclick="saveCourses()" >Зачувај</a>
+  <select id="Ден">
+  <option value="-1"  disabled selected >Ден</option>
+  <option value="1">Понеделник</option>
+  <option value="2">Вторник</option>
+  <option value="3">Среда</option>
+  <option value="4">Четврток</option>
+  <option value="5">Петок</option>
+  <option value="6">Сабота</option>
+</select> <br> <br>
+  <select id="Време" >
+  <option value="-1"  disabled selected >Време</option>
+  <option value="8">8:00</option>
+  <option value="9">9:00</option>
+  <option value="10">10:00</option>
+  <option value="11">11:00</option>
+  <option value="12">12:00</option>
+  <option value="13">13:00</option>
+  <option value="14">14:00</option>
+  <option value="15">15:00</option>
+  <option value="16">16:00</option>
+  <option value="17">17:00</option>
+  <option value="18">18:00</option>
+  <option value="19">19:00</option>
+</select> <br> <br>
+ <a href="#" class="btn" onclick="saveCourses()" >Зачувај</a> <a href="#" class="btn" onclick="cancel()" >Откажи</a>
 </div> 
 
 				<table>

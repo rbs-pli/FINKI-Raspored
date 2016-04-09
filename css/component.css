@@ -178,6 +178,10 @@ td.user-name {
 body{
   
   background: url(../bexy.jpg);
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
 }
 
 h1,p,.awesomplete {color: white;}
