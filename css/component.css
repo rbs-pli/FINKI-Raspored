@@ -174,14 +174,13 @@ td.user-name {
   background-color: #c9302c;
 }
 
-
 body{
   
   background: url(../bexy.jpg);
-    -webkit-background-size: cover; /* For WebKit*/
-    -moz-background-size: cover;    /* Mozilla*/
-    -o-background-size: cover;      /* Opera*/
-    background-size: cover;         /* Generic*/
+    -webkit-background-size: cover; 
+    -moz-background-size: cover;   
+    -o-background-size: cover;      
+    background-size: cover;         
 }
 
 h1,p,.awesomplete {color: white;}
@@ -218,3 +217,5 @@ a.btn {
   height: 15px;
   float: right;
 }
+
+
